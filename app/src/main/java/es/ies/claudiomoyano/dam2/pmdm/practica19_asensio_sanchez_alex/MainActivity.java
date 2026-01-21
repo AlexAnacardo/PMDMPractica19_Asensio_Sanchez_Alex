@@ -1,9 +1,16 @@
 package es.ies.claudiomoyano.dam2.pmdm.practica19_asensio_sanchez_alex;
 
+import android.Manifest;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -20,5 +27,34 @@ public class MainActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.SEND_SMS}, 100);
+        } else {
+            Intent serviceIntent = new Intent(this, ServicioBateria.class);
+            startService(serviceIntent);
+            Toast.makeText(this, "Servicio de batería iniciado", Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (requestCode == 100) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                Intent serviceIntent = new Intent(this, ServicioBateria.class);
+                startService(serviceIntent);
+                Toast.makeText(this, "Servicio de batería iniciado", Toast.LENGTH_SHORT).show();
+
+            } else {
+                Toast.makeText(this, "Permiso SMS denegado", Toast.LENGTH_LONG).show();
+            }
+        }
     }
 }

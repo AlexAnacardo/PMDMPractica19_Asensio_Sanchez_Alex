@@ -11,6 +11,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Practica19_Asensio_Sanchez_Alex">
+        <uses-permission android:name="android.permission.SEND_SMS"/>
+        <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+        <service
+            android:name=".ServicioBateria"
+            android:exported="false"/>
         <activity
             android:name=".MainActivity"
             android:exported="true">
