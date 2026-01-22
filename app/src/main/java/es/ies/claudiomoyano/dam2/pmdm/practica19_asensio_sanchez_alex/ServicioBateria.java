@@ -13,24 +13,24 @@ import android.widget.Toast;
 
 public class ServicioBateria extends Service {
 
-    //Cambiar este valor por el numero de telefono al que queramos que se envien los sms, no dejo el mio por obvias razones
-    private static final String PHONE_NUMBER = "123456789";
+    private static final String NUMERO_TELEFONO = "555-1212";
 
     private BroadcastReceiver batteryReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
 
+            //Extra level devuelve el % actual de bateria, scale devuelve el maximo
             int level = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
             int scale = intent.getIntExtra(BatteryManager.EXTRA_SCALE, -1);
 
-            int batteryPercent = (int) ((level / (float) scale) * 100);
+            int porcentajeBateria = (int) ((level / (float) scale) * 100);
 
-            if (batteryPercent <= 15) {
+            if (porcentajeBateria <= 15) {
                 Toast.makeText(context,
-                        "Batería baja: " + batteryPercent + "%",
+                        "Batería baja: " + porcentajeBateria + "%",
                         Toast.LENGTH_LONG).show();
 
-                sendSMS("Batería baja (" + batteryPercent + "%)");
+                sendSMS("Batería baja (" + porcentajeBateria + "%)");
             }
         }
     };
@@ -53,10 +53,10 @@ public class ServicioBateria extends Service {
         return null;
     }
 
-    private void sendSMS(String message) {
+    private void sendSMS(String mensaje) {
         try {
             SmsManager smsManager = SmsManager.getDefault();
-            smsManager.sendTextMessage(PHONE_NUMBER, null, message, null, null);
+            smsManager.sendTextMessage(NUMERO_TELEFONO, null, mensaje, null, null);
         } catch (Exception e) {
             e.printStackTrace();
         }
